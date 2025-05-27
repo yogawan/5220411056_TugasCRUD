@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ProductBrand {
+  id             Int              @id @default(autoincrement())
+  brand_name     String?
+  created_at     DateTime         @default(now()) @map("created_at")
+  updated_at     DateTime         @updatedAt @map("updated_at")
+
+  productCatalogs ProductCatalog[]
+
+  @@map("product_brands")
+}
+
+model ProductCatalog {
+  id           Int           @id @default(autoincrement())
+  product_name String?
+  type         String?
+  brand_id     Int?
+
+  brand        ProductBrand? @relation(fields: [brand_id], references: [id])
+
+  created_at   DateTime      @default(now()) @map("created_at")
+  updated_at   DateTime      @updatedAt @map("updated_at")
+
+  @@map("product_catalogs")
+}
